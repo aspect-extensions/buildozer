@@ -1,0 +1,14 @@
+"""Print syntactic view of a BUILD file"""
+
+load("./buildozer.axl", "buildozer")
+
+def impl(ctx) -> int:
+    buildozer(ctx, "print", ctx.args.target)
+    return 0
+
+print = task(
+    implementation = impl,
+    args = {
+        "target": args.positional(),
+    }
+)
