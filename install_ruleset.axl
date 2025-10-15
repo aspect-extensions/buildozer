@@ -1,0 +1,33 @@
+def string(value, memory, exports):
+    data_len = len(value)
+    data_ptr = exports.alloc(data_len)
+    memory.write(data_ptr, value.codepoints())
+    return (data_ptr, data_len)
+
+def buildtools(ctx):
+    buildozer = ctx.wasm.instantiate(
+        "../../bazel-bin/tools/buildozer/buildozer_/buildozer.wasm",
+        preopened_dirs = {
+            ctx.std.env.current_dir(): "/"
+        },
+    )
+    memory = buildozer.get_memory("memory")
+    exports = buildozer.exports
+    exports._initialize()
+    def apply(command, label, exports, memory):
+        command = string(command, memory, exports)
+        label = string(label, memory, exports)
+        exports.edit(command[0], command[1], label[0], label[1])
+
+    return struct(apply = lambda command, label: apply(command, label, exports, memory))
+
+def impl(ctx):
+    buildozer = buildtools(ctx)
+    buildozer.apply("new bazel_dep rules_oci", "MODULE.bazel:%bazel_dep")
+    buildozer.apply("set version 2.2.6", "MODULE.bazel:rules_oci")
+
+buildozer_source = struct(
+    implementation = impl,
+    args = {},
+    groups = ["experimental"],
+)
