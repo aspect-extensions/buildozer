@@ -10,8 +10,8 @@ jobs:
         steps:
             - uses: actions/checkout@v5
             - uses: bazel-contrib/setup-bazel@0.15.0
-            - run: bazel run --config=release --run_under=cp //tools:buildozer buildozer.wasm
+            - run: bazel build --config=release //tools:buildozer
             - name: Release
               uses: softprops/action-gh-release@v2
               with:
-                files: buildozer.wasm
+                files: bazel-bin/tools/buildozer_/buildozer.wasm
