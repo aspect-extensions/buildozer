@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  org-checks:
+    uses: aspect-extensions/.github/.github/workflows/org-check.yaml@main
+    secrets: inherit
+    permissions:
+      contents: read
+      pull-requests: write
