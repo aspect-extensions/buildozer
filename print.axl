@@ -1,4 +1,8 @@
-"""Print syntactic view of a BUILD file"""
+"""Run `aspect print` to get a syntactic view of a BUILD file.
+
+This takes place PRIOR to the loading phase, so macros are not expanded.
+This is useful to quickly search a repository without triggering a slow fetch and loading phase.
+"""
 
 def string(value, memory, exports):
     data_len = len(value)
