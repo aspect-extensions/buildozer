@@ -23,10 +23,10 @@ def buildtools(ctx):
 
 def impl(ctx):
     buildozer = buildtools(ctx)
-    buildozer.apply("new bazel_dep rules_oci", "MODULE.bazel:%bazel_dep")
-    buildozer.apply("set version 2.2.6", "MODULE.bazel:rules_oci")
+    buildozer.apply("new bazel_dep rules_img", "MODULE.bazel:%bazel_dep")
+    buildozer.apply("set version 0.3.2", "MODULE.bazel:rules_img")
 
-buildozer_source = struct(
+install_rules_img = task(
     implementation = impl,
     args = {},
     groups = ["experimental"],
