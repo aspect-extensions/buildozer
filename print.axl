@@ -11,7 +11,7 @@ def string(value, memory, exports):
     return (data_ptr, data_len)
 
 def impl(ctx) -> int:
-    buildozer_path = "/tmp/buildozer.wasm" #ctx.std.env.home_dir() + "/.cache/aspect/buildozer.wasm"
+    buildozer_path = ctx.std.env.home_dir() + "/.cache/buildozer.wasm"
     if not ctx.std.fs.exists(buildozer_path):
         ctx.http().download(
             url = "https://github.com/aspect-extensions/buildozer/releases/download/v0.0.3/buildozer.wasm",
