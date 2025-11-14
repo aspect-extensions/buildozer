@@ -1,2 +1,2 @@
 use_task("print.axl", "print")
-use_task("migrate.axl", "migrate_rules_img")
+use_task("migrate.axl", "install_rules_img")

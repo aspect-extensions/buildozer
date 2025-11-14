@@ -10,26 +10,8 @@ def string(value, memory, exports):
     memory.write(data_ptr, value.codepoints())
     return (data_ptr, data_len)
 
-def buildtools(ctx):
-    buildozer = ctx.wasm.instantiate(
-        "../../bazel-bin/tools/buildozer/buildozer_/buildozer.wasm",
-        preopened_dirs = {
-            ctx.std.env.current_dir(): "/"
-        },
-    )
-    memory = buildozer.get_memory("memory")
-    exports = buildozer.exports
-    exports._initialize()
-    def apply(command, label, exports, memory):
-        command = string(command, memory, exports)
-        label = string(label, memory, exports)
-        exports.edit(command[0], command[1], label[0], label[1])
-
-    return struct(apply = lambda command, label: apply(command, label, exports, memory))
-
 def impl(ctx) -> int:
-    buildozer = buildtools(ctx)
-    buildozer_path = ctx.std.env.home_dir() + "/.cache/aspect/buildozer.wasm"
+    buildozer_path = ctx.std.env.home_dir() + "/.cache/buildozer.wasm"
     if not ctx.std.fs.exists(buildozer_path):
         ctx.http().download(
             url = "https://github.com/aspect-extensions/buildozer/releases/download/v0.0.3/buildozer.wasm",
@@ -42,6 +24,8 @@ def impl(ctx) -> int:
             ctx.std.env.current_dir(): "/"
         },
     )
+    memory = buildozer.get_memory("memory")
+    buildozer.exports._initialize()
     command = string("print", memory, buildozer.exports)
     label = string("//:all", memory, buildozer.exports)
     buildozer.exports.edit(command[0], command[1], label[0], label[1])

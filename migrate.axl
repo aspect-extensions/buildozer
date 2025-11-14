@@ -29,5 +29,4 @@ def impl(ctx):
 install_rules_img = task(
     implementation = impl,
     args = {},
-    groups = ["experimental"],
 )
